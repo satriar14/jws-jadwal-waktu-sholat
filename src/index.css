@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* PostCSS will process these Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+      'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  }
+}
+
+@layer utilities {
+  .arabic-text {
+    font-family: 'Amiri', serif;
+    direction: rtl;
+    text-align: right;
+  }
+}

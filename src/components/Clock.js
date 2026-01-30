@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import moment from 'moment';
 
 const Clock = ({ onTick }) => {
@@ -9,24 +8,13 @@ const Clock = ({ onTick }) => {
     const timer = setInterval(() => {
       const newTime = moment().format('HH:mm:ss');
       setTime(newTime);
-      if (onTick) {
-        onTick();
-      }
+      if (onTick) onTick();
     }, 1000);
-
     return () => clearInterval(timer);
-  }, [onTick]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  return (
-    <motion.span
-      key={time}
-      initial={{ scale: 1 }}
-      animate={{ scale: [1, 1.02, 1] }}
-      transition={{ duration: 0.5, ease: "easeInOut" }}
-    >
-      {time}
-    </motion.span>
-  );
+  return <span>{time}</span>;
 };
 
 export default Clock;

@@ -37,11 +37,8 @@ export const fetchWithCorsFallback = async (url, options = {}, proxyIndex = -1) 
       (error.response === undefined && error.request !== undefined);
 
     if (isCorsError && proxyIndex < CORS_PROXIES.length - 1) {
-      // Try next proxy
       const nextProxyIndex = proxyIndex + 1;
       const proxyUrl = `${CORS_PROXIES[nextProxyIndex]}${encodeURIComponent(url)}`;
-      
-      console.warn(`CORS error detected, trying proxy ${nextProxyIndex + 1}...`);
       
       try {
         const response = await axios.get(proxyUrl, {

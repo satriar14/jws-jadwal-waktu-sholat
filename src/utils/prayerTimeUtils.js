@@ -64,30 +64,50 @@ export const isIqomahCountdownTime = (minutesSince) => {
 };
 
 /**
- * Check if it's in iqomah countdown range (4-9 minutes)
+ * Iqomah delay = menit dari adzan sampai iqomah (patokan tetap):
+ * - Subuh, Dzuhur: 3 menit adzan + 12 menit iqomah = 15 menit
+ * - Ashar, Maghrib, Isya: 3 menit adzan + 7 menit iqomah = 10 menit
+ */
+const IQOMAH_DELAY_SUBUH_DZUHUR = 15; // 3 + 12
+const IQOMAH_DELAY_DEFAULT = 10;      // 3 + 7
+
+/**
+ * Get iqomah delay in minutes after adzan for a prayer.
+ * Subuh & Dzuhur: 15 min (3 adzan + 12 iqomah); Ashar/Maghrib/Isya: 10 min (3 adzan + 7 iqomah).
+ * @param {string} prayer - Prayer key (subuh, dzuhur, ashar, maghrib, isya)
+ * @returns {number}
+ */
+export const getIqomahDelayMinutes = (prayer) => {
+  return prayer === 'subuh' || prayer === 'dzuhur' ? IQOMAH_DELAY_SUBUH_DZUHUR : IQOMAH_DELAY_DEFAULT;
+};
+
+/**
+ * Check if it's in iqomah countdown range (menit 3 sampai sebelum iqomah).
+ * Subuh/Dzuhur: 3–14 min; Ashar/Maghrib/Isya: 3–9 min
  * @param {Object} minutesSince - Object with minutes since each prayer
  * @returns {boolean}
  */
 export const isInIqomahCountdownRange = (minutesSince) => {
-  const checkRange = (minutes) => minutes > 2 && minutes < 10;
+  const checkRange = (minutes, delay) => minutes > 2 && minutes < delay;
   return (
-    checkRange(minutesSince.subuh) ||
-    checkRange(minutesSince.dzuhur) ||
-    checkRange(minutesSince.ashar) ||
-    checkRange(minutesSince.maghrib) ||
-    checkRange(minutesSince.isya)
+    checkRange(minutesSince.subuh, IQOMAH_DELAY_SUBUH_DZUHUR) ||
+    checkRange(minutesSince.dzuhur, IQOMAH_DELAY_SUBUH_DZUHUR) ||
+    checkRange(minutesSince.ashar, IQOMAH_DELAY_DEFAULT) ||
+    checkRange(minutesSince.maghrib, IQOMAH_DELAY_DEFAULT) ||
+    checkRange(minutesSince.isya, IQOMAH_DELAY_DEFAULT)
   );
 };
 
 /**
- * Check if it's time for iqomah
+ * Check if it's time for iqomah (countdown sudah 0).
+ * Subuh/Dzuhur: menit ke-15; Ashar/Maghrib/Isya: menit ke-10
  * @param {Object} minutesSince - Object with minutes since each prayer
  * @returns {boolean}
  */
 export const isIqomahTime = (minutesSince) => {
   return (
-    minutesSince.subuh === TIMING_STATES.IQOMAH ||
-    minutesSince.dzuhur === TIMING_STATES.IQOMAH ||
+    minutesSince.subuh === IQOMAH_DELAY_SUBUH_DZUHUR ||
+    minutesSince.dzuhur === IQOMAH_DELAY_SUBUH_DZUHUR ||
     minutesSince.ashar === TIMING_STATES.IQOMAH ||
     minutesSince.maghrib === TIMING_STATES.IQOMAH ||
     minutesSince.isya === TIMING_STATES.IQOMAH
@@ -125,7 +145,7 @@ export const isResetTime = (minutesSince) => {
 };
 
 /**
- * Get the prayer name that is currently in adzan
+ * Get the prayer name that is currently in adzan (exactly minute 0)
  * @param {Object} minutesSince - Object with minutes since each prayer
  * @returns {string|null} Prayer name or null
  */
@@ -137,4 +157,25 @@ export const getCurrentAdzanPrayer = (minutesSince) => {
   if (minutesSince.isya === TIMING_STATES.ADZAN) return 'isya';
   return null;
 };
+
+/**
+ * Get the prayer that is in adzan countdown window (0–3 minutes after adzan).
+ * Used so countdown display doesn’t disappear when minutesSince is 1 or 2.
+ * @param {Object} minutesSince - Object with minutes since each prayer
+ * @returns {string|null} Prayer name or null
+ */
+export const getCurrentAdzanPrayerInWindow = (minutesSince) => {
+  const order = ['subuh', 'dzuhur', 'ashar', 'maghrib', 'isya'];
+  let best = null;
+  let bestMin = 3;
+  for (const prayer of order) {
+    const m = minutesSince[prayer];
+    if (typeof m === 'number' && m >= 0 && m < 3 && m < bestMin) {
+      bestMin = m;
+      best = prayer;
+    }
+  }
+  return best;
+};
+
 

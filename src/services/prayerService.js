@@ -25,7 +25,6 @@ export const prayerService = {
       
       throw new Error('Invalid API response structure');
     } catch (error) {
-      console.error('Error fetching prayer schedule:', error);
       throw error;
     }
   },
@@ -44,7 +43,6 @@ export const prayerService = {
       });
       return response.data;
     } catch (error) {
-      console.error('Error converting to Hijri:', error);
       throw error;
     }
   },
@@ -61,7 +59,6 @@ export const prayerService = {
       }
       throw new Error('Invalid API response structure');
     } catch (error) {
-      console.error('Error fetching hadith sources:', error);
       throw error;
     }
   },
@@ -88,7 +85,6 @@ export const prayerService = {
       }
       throw new Error('Invalid API response structure');
     } catch (error) {
-      console.error('Error fetching hadith:', error);
       throw error;
     }
   },

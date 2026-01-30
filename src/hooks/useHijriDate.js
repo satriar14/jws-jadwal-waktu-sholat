@@ -31,8 +31,7 @@ export const useHijriDate = (refreshFlag) => {
         throw new Error('Invalid response structure from API');
       }
     } catch (err) {
-      console.error('Error fetching Hijri date:', err);
-      setError(err.message);
+      setError(err?.message ?? 'Gagal memuat tanggal Hijriyah');
     } finally {
       setLoading(false);
     }

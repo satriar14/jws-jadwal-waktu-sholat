@@ -38,8 +38,7 @@ export const usePrayerTimes = (refreshFlag) => {
         throw new Error('Invalid response structure from API');
       }
     } catch (err) {
-      console.error('Error fetching prayer times:', err);
-      setError(err.message);
+      setError(err?.message ?? 'Gagal memuat jadwal');
     } finally {
       setLoading(false);
     }
@@ -49,7 +48,7 @@ export const usePrayerTimes = (refreshFlag) => {
     updatePrayerTimes();
   }, [refreshFlag, updatePrayerTimes]);
 
-  // Update minutes every minute
+  // Update minutes every second for accurate countdown calculations
   useEffect(() => {
     if (!prayerSchedule) return;
 
@@ -69,7 +68,7 @@ export const usePrayerTimes = (refreshFlag) => {
       });
 
       setMinutesSince(newMinutesSince);
-    }, 60000); // Update every minute
+    }, 1000); // Update every second for accurate countdown
 
     return () => clearInterval(interval);
   }, [prayerSchedule]);

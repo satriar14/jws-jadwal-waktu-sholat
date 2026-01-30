@@ -16,22 +16,6 @@
   background: rgba(0, 103, 131, 0.7);
 }
 
-/* Animation for prayer time cards */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade-in {
-  animation: fadeIn 0.5s ease-in-out;
-}
-
 /* Print styles */
 @media print {
   body {
